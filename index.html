@@ -18,9 +18,31 @@
         let time = (new Date()).getTime(); // 時刻(ミリ秒単位)
         let objects = []; // オブジェクトの配列
 
-        // オブジェクト群を初期化
-        const initObjects = () => {
-            objects = [];
+        /**
+         * @typedef {object} Position
+         * @property {number} x - X座標
+         * @property {number} y - Y座標
+         */
+
+        /**
+         * @typedef {object} Velocity
+         * @property {number} x - X方向の速度
+         * @property {number} y - Y方向の速度
+         */
+
+        /**
+         * @typedef {object} MovingObject
+         * @property {Position} position - 初期位置
+         * @property {Velocity} velocity - 初期速度
+         */
+
+        /**
+         * オブジェクト群を作成する。
+         * * @global {number} width - 描画領域の幅（初期位置と速度の範囲設定に使用）。
+         * @global {number} height - 描画領域の高さ（初期位置と速度の範囲設定に使用）。
+         */
+        const createObjects = () => {
+            let objects = [];
             // ランダムに位置と速度を決めて、オブジェクトを追加する
             for (let i = 0; i < 4; ++i) {
                 // 位置
@@ -33,9 +55,17 @@
                 const obj = {position: {x: px, y: py}, velocity: {x: vx, y: vy}};
                 objects.push(obj);
             }
+            return objects;
         };
 
-        // オブジェクト群を動かす
+        /**
+         * オブジェクト群を現在の速度と経過時間に基づいて動かし、
+         * 境界 (0, 0) から (width, height) までの範囲で壁との衝突判定と反射を行う。
+         * * @param {MovingObject[]} objects - 動かす対象のオブジェクトの配列。各オブジェクトはpositionとvelocityプロパティを持つ。
+         * @param {number} diff_time - 前回の更新からの経過時間 (ミリ秒)。
+         * @param {number} width - 描画領域の幅 (グローバル変数として定義されていると想定)。
+         * @param {number} height - 描画領域の高さ (グローバル変数として定義されていると想定)。
+         */
         const moveObjects = (objects, diff_time) => {
             let diff_seconds = diff_time / 1000.0; // ミリ秒を秒単位にする
 
@@ -63,8 +93,12 @@
             }
         };
 
-        // オブジェクト群を描画する関数
-        const drawObjects = (objects) => {
+        /**
+         * オブジェクトの配列を受け取り、それらを線で結び、各位置に円を描画する。
+         * * @param {CanvasRenderingContext2D} ctx - 描画に使用するCanvas 2Dコンテキスト（グローバルに定義されていると想定）。
+         * @param {MovingObject[]} objects - 描画するオブジェクトの配列。各オブジェクトはpositionプロパティを持つ。
+         */
+        const drawObjects = (ctx, objects) => {
             // 折れ線を描画する
             ctx.lineWidth = 12;
             ctx.strokeStyle = "green";
@@ -112,15 +146,15 @@
             moveObjects(objects, diff_time);
 
             // オブジェクト群を描く
-            drawObjects(objects);
+            drawObjects(ctx, objects);
 
             // 次のアニメーションフレームを要求する
             if (anime)
                 anime = window.requestAnimationFrame(render);
         };
 
-        // 初期化
-        initObjects();
+        // オブジェクト配列の作成
+        objects = createObjects();
         // アニメーションを開始する
         anime = window.requestAnimationFrame(render);
     </script>
