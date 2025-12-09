@@ -34,7 +34,6 @@
                 objects.push(obj);
             }
         };
-        initObjects();
 
         // オブジェクト群を動かす
         const moveObjects = (objects, diff_time) => {
@@ -120,6 +119,8 @@
                 anime = window.requestAnimationFrame(render);
         };
 
+        // 初期化
+        initObjects();
         // アニメーションを開始する
         anime = window.requestAnimationFrame(render);
     </script>
