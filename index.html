@@ -94,34 +94,17 @@
         };
 
         /**
-         * オブジェクトの配列を受け取り、それらを線で結び、各位置に円を描画する。
+         * オブジェクトの配列を受け取り、各位置にオブジェクトを描画する。
          * * @param {CanvasRenderingContext2D} ctx - 描画に使用するCanvas 2Dコンテキスト（グローバルに定義されていると想定）。
          * @param {MovingObject[]} objects - 描画するオブジェクトの配列。各オブジェクトはpositionプロパティを持つ。
          */
         const drawObjects = (ctx, objects) => {
-            // 折れ線を描画する
-            ctx.lineWidth = 12;
-            ctx.strokeStyle = "green";
-            ctx.lineCap = "round"; // 線の端を丸くする
-            ctx.lineJoin = "round"; // 角を丸くする
-            ctx.beginPath();
-            let first = true;
-            for (let obj of objects) {
-                if (first) {
-                    first = false;
-                    ctx.moveTo(obj.position.x, obj.position.y);
-                } else {
-                    ctx.lineTo(obj.position.x, obj.position.y);
-                }
-            }
-            ctx.stroke();
-
-            // オブジェクトの位置に複数の丸を描画する
             ctx.strokeStyle = "white";
             ctx.lineWidth = 3;
             ctx.fillStyle = "red";
             let radius = 10;
             for (let obj of objects) {
+                // 丸を描画する。
                 ctx.beginPath();
                 ctx.arc(obj.position.x, obj.position.y, radius, 0, 2 * Math.PI, false);
                 ctx.stroke();
